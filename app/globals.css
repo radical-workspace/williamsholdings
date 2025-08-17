@@ -1,0 +1,42 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root { --brand:#059669; }
+body { @apply bg-slate-50 text-slate-900; }
+
+/* Cards & badges */
+.card      { @apply bg-white rounded-3xl shadow p-5; }
+.card-big  { @apply bg-white rounded-3xl shadow p-6; }
+.badge     { @apply px-3 py-1 rounded-full text-sm; }
+.badge-active   { @apply bg-emerald-100 text-emerald-700; }
+.badge-inactive { @apply bg-slate-100 text-slate-700; }
+
+/* Buttons & inputs */
+.btn         { @apply rounded-2xl px-4 py-3 font-semibold text-center; }
+.btn-primary { background:var(--brand); color:#fff; }
+.btn-white\/10 { @apply border border-white/20 bg-white/10 text-white; } /* used in hero buttons */
+.btn-ghost   { @apply bg-slate-100 text-slate-800; }
+.input       { @apply w-full rounded-2xl border border-slate-200 p-3; }
+
+/* Brand helpers */
+.text-brand { color:var(--brand); }
+.bg-brand   { background:var(--brand); }
+
+/* Hero (blue gradient like your reference) */
+.hero {
+  @apply rounded-3xl p-5 text-white shadow relative overflow-hidden;
+  background: radial-gradient(120% 120% at 0% 0%, #1e3a8a 0%, #0ea5e9 55%, #0284c7 100%);
+}
+.hero .muted { @apply text-white/80; }
+
+/* Tiles */
+.tile      { @apply rounded-2xl p-4 bg-white shadow hover:shadow-md transition; }
+.tile h3   { @apply font-semibold; }
+.tile p    { @apply text-sm text-slate-600 mt-1; }
+
+/* Bottom nav */
+.navbar       { @apply fixed bottom-0 left-0 right-0 border-t bg-white/90 backdrop-blur; }
+.navbar-inner { @apply mx-auto grid max-w-md grid-cols-4 text-center; }
+.nav-item     { @apply p-3 text-slate-700; }
+.nav-item-active { color:var(--brand); font-weight:700; }
