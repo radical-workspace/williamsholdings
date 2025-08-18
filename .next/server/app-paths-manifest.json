@@ -1,0 +1,9 @@
+{
+  "/_not-found/page": "app/_not-found/page.js",
+  "/auth/complete/page": "app/auth/complete/page.js",
+  "/(main)/dashboard/page": "app/(main)/dashboard/page.js",
+  "/(main)/profile/page": "app/(main)/profile/page.js",
+  "/(main)/stats/page": "app/(main)/stats/page.js",
+  "/(main)/cards/page": "app/(main)/cards/page.js",
+  "/(main)/withdraw/page": "app/(main)/withdraw/page.js"
+}

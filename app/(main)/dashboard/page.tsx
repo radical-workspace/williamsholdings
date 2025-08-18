@@ -7,31 +7,41 @@ function formatMoney(amount: number, currency: string) {
 }
 
 export default async function Dashboard() {
-  const sb = sbServer();
-  const { data: { user } } = await sb.auth.getUser();
-
   let balance = 0;
   let acct = '••••••••';
   let currency = process.env.NEXT_PUBLIC_DEFAULT_CURRENCY || 'USD';
   let status: 'Active' | 'Inactive' = 'Inactive';
   let name = 'there';
 
-  if (user) {
-    const [{ data: acc }, { data: prof }] = await Promise.all([
-      sb.from('accounts')
-        .select('available_balance,account_number,currency')
-        .eq('user_id', user.id).limit(1).maybeSingle(),
-      sb.from('profiles')
-        .select('first_name').eq('user_id', user.id).limit(1).maybeSingle()
-    ]);
+  try {
+    const sb = sbServer();
+    const { data: { user } } = await sb.auth.getUser();
 
-    if (acc) {
-      balance = Number(acc.available_balance || 0);
-      acct = acc.account_number || acct;
-      currency = acc.currency || currency;
-      status = 'Active';
+    if (user) {
+      try {
+        const [{ data: acc }, { data: prof }] = await Promise.all([
+          sb.from('accounts')
+            .select('available_balance,account_number,currency')
+            .eq('user_id', user.id).limit(1).maybeSingle(),
+          sb.from('profiles')
+            .select('first_name').eq('user_id', user.id).limit(1).maybeSingle()
+        ]);
+
+        if (acc) {
+          balance = Number(acc.available_balance || 0);
+          acct = acc.account_number || acct;
+          currency = acc.currency || currency;
+          status = 'Active';
+        }
+        name = prof?.first_name || (user.email?.split('@')[0] ?? 'there');
+      } catch (dbError) {
+        // If database queries fail, use default values and user email
+        console.error('Database query error:', dbError);
+        name = user.email?.split('@')[0] ?? 'there';
+      }
     }
-    name = prof?.first_name || (user.email?.split('@')[0] ?? 'there');
+  } catch (error) {
+    console.error('Authentication error:', error);
   }
 
   const masked = acct.length >= 6 ? `${acct.slice(0,4)}••••${acct.slice(-2)}` : acct;
