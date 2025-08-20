@@ -45,7 +45,7 @@ export async function POST(req: Request) {
     // First check if profile exists, if not create it
     let { data: profile, error: profileError } = await supabase
       .from('profiles')
-      .select('id')
+      .select('user_id')
       .eq('user_id', user.id)
       .single();
 

@@ -1,6 +1,6 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+/* If using Tailwind CSS, ensure your build process supports @tailwind directives.
+   If not using Tailwind, remove these lines. */
+```
 
 :root { --brand:#059669; }
 body { @apply bg-slate-50 text-slate-900; }
@@ -16,7 +16,7 @@ body { @apply bg-slate-50 text-slate-900; }
 .btn         { @apply rounded-2xl px-4 py-3 font-semibold text-center; }
 .btn-primary { background:var(--brand); color:#fff; }
 .btn-white\/10 { @apply border border-white/20 bg-white/10 text-white; } /* used in hero buttons */
-.btn-ghost   { @apply bg-slate-100 text-slate-800; }
+.btn-ghost   { background-color: #f1f5f9; color: #1e293b; }
 .input       { @apply w-full rounded-2xl border border-slate-200 p-3; }
 
 /* Brand helpers */

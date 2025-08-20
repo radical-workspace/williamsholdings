@@ -13,7 +13,5 @@
         "*supabase*.sql": "postgresql",
         "*fix*.sql": "postgresql"
     },
-    "sql.dialect": "postgresql",
-    "genieai.enableGenerateCommitMessage": true,
-    "genieai.enableConversationHistory": true
+    "sql.dialect": "postgresql"
 }

@@ -1,9 +1,7 @@
 {
-  "/auth/sign-in/page": "app/auth/sign-in/page.js",
-  "/auth/pin-setup/page": "app/auth/pin-setup/page.js",
-  "/auth/sign-up/page": "app/auth/sign-up/page.js",
-  "/admin/login/page": "app/admin/login/page.js",
-  "/admin/page": "app/admin/page.js",
-  "/(main)/dashboard/page": "app/(main)/dashboard/page.js",
-  "/(main)/cards/page": "app/(main)/cards/page.js"
+  "/(main)/transactions/page": "app/(main)/transactions/page.js",
+  "/(main)/withdraw/page": "app/(main)/withdraw/page.js",
+  "/(main)/stats/page": "app/(main)/stats/page.js",
+  "/(main)/payout-methods/page": "app/(main)/payout-methods/page.js",
+  "/(main)/deposit/page": "app/(main)/deposit/page.js"
 }
