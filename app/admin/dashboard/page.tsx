@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { useRouter } from 'next/navigation';
 import { sbClient } from '@/lib/supabase/client';
 
@@ -25,7 +25,6 @@ export default function AdminDashboard() {
   const [loading, setLoading] = useState(true);
   const router = useRouter();
 
-  import { useCallback } from 'react';
 
   const checkAdminAuth = useCallback(async () => {
     // Use Supabase auth session rather than localStorage
