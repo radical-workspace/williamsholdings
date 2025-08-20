@@ -3,6 +3,8 @@ import { redirect } from 'next/navigation';
 import { sbServer } from '@/lib/supabase/server';
 import { cookies } from 'next/headers';
 
+export const dynamic = 'force-dynamic'
+
 export default async function Page() {
   try {
     const sb = sbServer();

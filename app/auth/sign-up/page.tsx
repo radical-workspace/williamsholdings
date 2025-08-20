@@ -2,6 +2,7 @@
 import { useState } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { sbClient } from '@/lib/supabase/client';
+export const dynamic = 'force-dynamic'
 export default function SignUp(){
   const [email,setEmail]=useState(''); const [password,setPassword]=useState('');
   const [error,setError]=useState<string|null>(null); const [loading,setLoading]=useState(false);
@@ -10,7 +11,7 @@ export default function SignUp(){
     const sb=sbClient(); const {error}=await sb.auth.signUp({email,password}); setLoading(false);
     if(error){setError(error.message);return;} r.push(`/auth/pin-setup?redirectedFrom=${encodeURIComponent(from)}`); }
   return (<div className="min-h-screen flex items-center justify-center p-4"><div className="w-full max-w-sm space-y-4 card">
-    <div className="text-center space-y-1"><img src="/logo.svg" className="mx-auto h-10"/><h1 className="text-xl font-semibold">Create account</h1></div>
+  <div className="text-center space-y-1"><img src="/logo.svg" className="mx-auto h-10" alt="WilliamsHoldings logo"/><h1 className="text-xl font-semibold">Create account</h1></div>
     <form onSubmit={submit} className="space-y-3">
       <input className="input" placeholder="Email" value={email} onChange={e=>setEmail(e.target.value)} required/>
       <input className="input" type="password" placeholder="Password" value={password} onChange={e=>setPassword(e.target.value)} required/>

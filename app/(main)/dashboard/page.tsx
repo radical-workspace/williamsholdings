@@ -1,4 +1,6 @@
 import { sbServer } from '@/lib/supabase/server';
+
+export const dynamic = 'force-dynamic'
 import GreetingClock from '@/components/GreetingClock';
 
 function formatMoney(amount: number, currency: string) {

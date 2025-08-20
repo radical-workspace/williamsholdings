@@ -1,6 +1,7 @@
 'use client';
 import { useState } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
+export const dynamic = 'force-dynamic'
 export default function PinSetup(){
   const [a,setA]=useState(''); const [b,setB]=useState(''); const [error,setError]=useState<string|null>(null); const [loading,setLoading]=useState(false);
   const r=useRouter(); const sp=useSearchParams(); const from=sp.get('redirectedFrom')||'/dashboard';
