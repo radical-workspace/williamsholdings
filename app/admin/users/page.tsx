@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { useRouter } from 'next/navigation';
 import { sbClient } from '@/lib/supabase/client';
 
@@ -29,18 +29,18 @@ export default function AdminUsersPage() {
   const [showEditModal, setShowEditModal] = useState(false);
   const router = useRouter();
 
-  useEffect(() => {
-    checkAdminAuth();
-    loadUsers();
-  }, []);
-
-  async function checkAdminAuth() {
+  const checkAdminAuth = useCallback(async () => {
     const { data: { user } } = await sbClient().auth.getUser();
     if (!user) {
       router.push('/admin/login');
       return;
     }
-  }
+  }, [router]);
+
+  useEffect(() => {
+    checkAdminAuth();
+    loadUsers();
+  }, [checkAdminAuth]);
 
   async function loadUsers() {
     try {

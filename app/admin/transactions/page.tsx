@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { useRouter } from 'next/navigation';
 import { sbClient } from '@/lib/supabase/client';
 import useAdminAuth from '@/components/hooks/useAdminAuth';
@@ -34,20 +34,19 @@ export default function AdminTransactionsPage() {
   const [showEditModal, setShowEditModal] = useState(false);
   const router = useRouter();
 
-  useEffect(() => {
-    // centralized auth check
-    checkAdminAuth();
-    loadTransactions();
-  }, []);
-
-  async function checkAdminAuth() {
-    // use the shared hook instead of localStorage; keep runtime check for safety
+  const checkAdminAuth = useCallback(async () => {
     const { data: { user } } = await sbClient().auth.getUser();
     if (!user) {
       router.push('/admin/login');
       return;
     }
-  }
+  }, [router]);
+
+  useEffect(() => {
+    // centralized auth check
+    checkAdminAuth();
+    loadTransactions();
+  }, [checkAdminAuth]);
 
   async function loadTransactions() {
     try {

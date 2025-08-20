@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { useRouter } from 'next/navigation';
 import { sbClient } from '@/lib/supabase/client';
 import useAdminAuth from '@/components/hooks/useAdminAuth';
@@ -11,17 +11,17 @@ export default function AdminSettingsPage() {
   const [message, setMessage] = useState('');
   const router = useRouter();
 
-  useEffect(() => {
-    checkAdminAuth();
-  }, []);
-
-  async function checkAdminAuth() {
+  const checkAdminAuth = useCallback(async () => {
     const { data: { user } } = await sbClient().auth.getUser();
     if (!user) {
       router.push('/admin/login');
       return;
     }
-  }
+  }, [router]);
+
+  useEffect(() => {
+    checkAdminAuth();
+  }, [checkAdminAuth]);
 
   async function handleCreateAdminUser(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
