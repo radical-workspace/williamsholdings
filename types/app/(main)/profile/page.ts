@@ -1,8 +1,8 @@
 // File: C:\Users\HP ELITEBOOK 1030 G3\Downloads\WilliamsHoldings-\app\(main)\profile\page.tsx
-import * as entry from '../../../../../app/(main)/profile/page.js'
+import * as entry from '../../../../app/(main)/profile/page.js'
 import type { ResolvingMetadata, ResolvingViewport } from 'next/dist/lib/metadata/types/metadata-interface.js'
 
-type TEntry = typeof import('../../../../../app/(main)/profile/page.js')
+type TEntry = typeof import('../../../../app/(main)/profile/page.js')
 
 type SegmentParams<T extends Object = any> = T extends Record<string, any>
   ? { [K in keyof T]: T[K] extends string ? string | string[] | undefined : never }

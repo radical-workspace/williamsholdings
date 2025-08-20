@@ -44,7 +44,7 @@ export default function AdminUsersPage() {
 
   async function loadUsers() {
     try {
-  const { data, error } = await sbClient()
+      const { data, error } = await sbClient()
         .from('profiles')
         .select(`
           *,

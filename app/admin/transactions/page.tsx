@@ -51,7 +51,7 @@ export default function AdminTransactionsPage() {
 
   async function loadTransactions() {
     try {
-  const { data, error } = await sbClient()
+      const { data, error } = await sbClient()
         .from('transactions')
         .select(`
           *,

@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { sbClient } from '@/lib/supabase/client';
 import useAdminAuth from '@/components/hooks/useAdminAuth';
+import { error } from 'console';
 
 export default function AdminSettingsPage() {
   const [loading, setLoading] = useState(false);
@@ -32,7 +33,6 @@ export default function AdminSettingsPage() {
     const password = formData.get('password') as string;
     const firstName = formData.get('firstName') as string;
     const lastName = formData.get('lastName') as string;
-
     try {
       // Optionally create server-side via protected API (requires caller to be admin)
       const createServer = (document.getElementById('create-server-side') as HTMLInputElement)?.checked;
@@ -58,7 +58,7 @@ export default function AdminSettingsPage() {
       }
 
       // Create user with Supabase Auth (client-side)
-  const { data, error: authError } = await sbClient().auth.signUp({
+      const { data, error: authError } = await sbClient().auth.signUp({
         email,
         password,
       });
