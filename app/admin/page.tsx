@@ -2,18 +2,22 @@
 
 import { useEffect } from 'react';
 import { useRouter } from 'next/navigation';
+import { sbClient } from '@/lib/supabase/client';
 
 export default function AdminHomePage() {
   const router = useRouter();
 
   useEffect(() => {
-    // Check if user is already logged in as admin
-    const adminSession = localStorage.getItem('admin_session');
-    if (adminSession) {
-      router.push('/admin/dashboard');
-    } else {
-      router.push('/admin/login');
+    async function decide() {
+      try {
+        const { data: { user } } = await sbClient().auth.getUser();
+        if (user) router.push('/admin/dashboard');
+        else router.push('/admin/login');
+      } catch (e) {
+        router.push('/admin/login');
+      }
     }
+    decide();
   }, [router]);
 
   return (

@@ -16,7 +16,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <style>{`:root{--brand:${PRIMARY}}`}</style>
       </head>
       <body>
-        <div className="mx-auto min-h-screen max-w-md bg-slate-50">{children}</div>
+        <div className="mx-auto min-h-screen max-w-7xl bg-slate-50 px-4 sm:px-6 lg:px-8">{children}</div>
       </body>
     </html>
   );

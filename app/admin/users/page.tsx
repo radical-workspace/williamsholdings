@@ -35,15 +35,8 @@ export default function AdminUsersPage() {
   }, []);
 
   async function checkAdminAuth() {
-    const adminSession = localStorage.getItem('admin_session');
-    if (!adminSession) {
-      router.push('/admin/login');
-      return;
-    }
-
-    const { data: { user } } = await sbClient.auth.getUser();
+    const { data: { user } } = await sbClient().auth.getUser();
     if (!user) {
-      localStorage.removeItem('admin_session');
       router.push('/admin/login');
       return;
     }
@@ -51,7 +44,7 @@ export default function AdminUsersPage() {
 
   async function loadUsers() {
     try {
-      const { data, error } = await sbClient
+  const { data, error } = await sbClient()
         .from('profiles')
         .select(`
           *,
@@ -76,7 +69,7 @@ export default function AdminUsersPage() {
 
   async function handleUpdateUser(userId: string, updates: Partial<User>) {
     try {
-      const { error } = await sbClient
+      const { error } = await sbClient()
         .from('profiles')
         .update(updates)
         .eq('id', userId);
@@ -99,10 +92,10 @@ export default function AdminUsersPage() {
 
     try {
       // First delete related accounts
-      await sbClient.from('accounts').delete().eq('user_id', userId);
+  await sbClient().from('accounts').delete().eq('user_id', userId);
       
       // Then delete the profile
-      const { error } = await sbClient.from('profiles').delete().eq('id', userId);
+  const { error } = await sbClient().from('profiles').delete().eq('id', userId);
       
       if (error) throw error;
       await loadUsers();
@@ -116,7 +109,7 @@ export default function AdminUsersPage() {
     try {
       const accountNumber = 'WH' + Math.random().toString().substr(2, 8);
       
-      const { error } = await sbClient.from('accounts').insert({
+  const { error } = await sbClient().from('accounts').insert({
         user_id: userId,
         account_number: accountNumber,
         available_balance: 0,

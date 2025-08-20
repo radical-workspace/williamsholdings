@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { sbClient } from '@/lib/supabase/client';
+import useAdminAuth from '@/components/hooks/useAdminAuth';
 
 interface Account {
   id: string;
@@ -37,15 +38,8 @@ export default function AdminAccountsPage() {
   }, []);
 
   async function checkAdminAuth() {
-    const adminSession = localStorage.getItem('admin_session');
-    if (!adminSession) {
-      router.push('/admin/login');
-      return;
-    }
-
-    const { data: { user } } = await sbClient.auth.getUser();
+    const { data: { user } } = await sbClient().auth.getUser();
     if (!user) {
-      localStorage.removeItem('admin_session');
       router.push('/admin/login');
       return;
     }
@@ -53,7 +47,7 @@ export default function AdminAccountsPage() {
 
   async function loadAccounts() {
     try {
-      const { data, error } = await sbClient
+      const { data, error } = await sbClient()
         .from('accounts')
         .select(`
           *,
@@ -76,7 +70,7 @@ export default function AdminAccountsPage() {
 
   async function handleUpdateAccount(accountId: string, updates: Partial<Account>) {
     try {
-      const { error } = await sbClient
+      const { error } = await sbClient()
         .from('accounts')
         .update(updates)
         .eq('id', accountId);
@@ -100,7 +94,7 @@ export default function AdminAccountsPage() {
       const newBalance = Number(selectedAccount.available_balance) + adjustment;
 
       // Update account balance
-      const { error: accountError } = await sbClient
+      const { error: accountError } = await sbClient()
         .from('accounts')
         .update({ available_balance: newBalance })
         .eq('id', selectedAccount.id);
@@ -108,7 +102,7 @@ export default function AdminAccountsPage() {
       if (accountError) throw accountError;
 
       // Create transaction record
-      const { error: transactionError } = await sbClient
+      const { error: transactionError } = await sbClient()
         .from('transactions')
         .insert({
           user_id: selectedAccount.user_id,
@@ -139,10 +133,10 @@ export default function AdminAccountsPage() {
 
     try {
       // First delete related transactions
-      await sbClient.from('transactions').delete().eq('user_id', accountId);
+  await sbClient().from('transactions').delete().eq('user_id', accountId);
       
       // Then delete the account
-      const { error } = await sbClient.from('accounts').delete().eq('id', accountId);
+  const { error } = await sbClient().from('accounts').delete().eq('id', accountId);
       
       if (error) throw error;
       await loadAccounts();

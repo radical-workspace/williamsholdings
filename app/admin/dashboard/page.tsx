@@ -25,63 +25,58 @@ export default function AdminDashboard() {
   const [loading, setLoading] = useState(true);
   const router = useRouter();
 
-  useEffect(() => {
-    checkAdminAuth();
-    loadDashboardData();
-  }, []);
+  import { useCallback } from 'react';
 
-  async function checkAdminAuth() {
-    const adminSession = localStorage.getItem('admin_session');
-    if (!adminSession) {
-      router.push('/admin/login');
-      return;
-    }
-
-    const { data: { user } } = await sbClient.auth.getUser();
+  const checkAdminAuth = useCallback(async () => {
+    // Use Supabase auth session rather than localStorage
+    const { data: { user } } = await sbClient().auth.getUser();
     if (!user) {
-      localStorage.removeItem('admin_session');
       router.push('/admin/login');
       return;
     }
 
     // Verify admin role
-    const { data: profile } = await sbClient
+    const { data: profile } = await sbClient()
       .from('profiles')
       .select('role')
       .eq('user_id', user.id)
       .single();
 
     if (!profile || profile.role !== 'admin') {
-      localStorage.removeItem('admin_session');
       router.push('/admin/login');
     }
-  }
+  }, [router]);
+
+  useEffect(() => {
+    checkAdminAuth();
+    loadDashboardData();
+  }, [checkAdminAuth]);
 
   async function loadDashboardData() {
     try {
       // Load statistics
-      const [usersResult, accountsResult, transactionsResult] = await Promise.all([
-        sbClient.from('profiles').select('*', { count: 'exact' }),
-        sbClient.from('accounts').select('*, profiles!inner(first_name, last_name, email)', { count: 'exact' }),
-        sbClient.from('transactions').select('*', { count: 'exact' })
-      ]);
+    const [usersResult, accountsResult, transactionsResult] = await Promise.all([
+  sbClient().from('profiles').select('*', { count: 'exact' }),
+  sbClient().from('accounts').select('*, profiles!inner(first_name, last_name, email)', { count: 'exact' }),
+  sbClient().from('transactions').select('*', { count: 'exact' })
+    ]);
 
       // Calculate total balance
-      const { data: balanceData } = await sbClient
+  const { data: balanceData } = await sbClient()
         .from('accounts')
         .select('available_balance');
 
-      const totalBalance = balanceData?.reduce((sum, acc) => sum + (Number(acc.available_balance) || 0), 0) || 0;
+  const totalBalance = balanceData?.reduce((sum: number, acc: any) => sum + (Number(acc.available_balance) || 0), 0) || 0;
 
       // Get recent users (last 10)
-      const { data: recentUsers } = await sbClient
+  const { data: recentUsers } = await sbClient()
         .from('profiles')
         .select('*, accounts!left(account_number, available_balance)')
         .order('created_at', { ascending: false })
         .limit(10);
 
       // Get recent transactions (last 10)
-      const { data: recentTransactions } = await sbClient
+  const { data: recentTransactions } = await sbClient()
         .from('transactions')
         .select('*, profiles!inner(first_name, last_name)')
         .order('created_at', { ascending: false })
@@ -103,8 +98,7 @@ export default function AdminDashboard() {
   }
 
   async function handleLogout() {
-    await sbClient.auth.signOut();
-    localStorage.removeItem('admin_session');
+  await sbClient().auth.signOut();
     router.push('/admin/login');
   }
 
@@ -125,32 +119,6 @@ export default function AdminDashboard() {
 
   return (
     <div className="min-h-screen bg-gray-100">
-      {/* Header */}
-      <header className="bg-white shadow-sm border-b">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex justify-between items-center h-16">
-            <div className="flex items-center">
-              <h1 className="text-xl font-semibold text-gray-900">WilliamsHoldings Admin</h1>
-            </div>
-            <div className="flex items-center space-x-4">
-              <nav className="flex space-x-4">
-                <a href="/admin/users" className="text-gray-600 hover:text-gray-900 px-3 py-2 rounded-md text-sm font-medium">Users</a>
-                <a href="/admin/accounts" className="text-gray-600 hover:text-gray-900 px-3 py-2 rounded-md text-sm font-medium">Accounts</a>
-                <a href="/admin/transactions" className="text-gray-600 hover:text-gray-900 px-3 py-2 rounded-md text-sm font-medium">Transactions</a>
-                <a href="/admin/settings" className="text-gray-600 hover:text-gray-900 px-3 py-2 rounded-md text-sm font-medium">Settings</a>
-              </nav>
-              <button
-                onClick={handleLogout}
-                className="bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded-md text-sm font-medium"
-              >
-                Logout
-              </button>
-            </div>
-          </div>
-        </div>
-      </header>
-
-      {/* Main Content */}
       <main className="max-w-7xl mx-auto py-6 sm:px-6 lg:px-8">
         {/* Stats Cards */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">

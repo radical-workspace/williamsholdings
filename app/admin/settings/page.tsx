@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { sbClient } from '@/lib/supabase/client';
+import useAdminAuth from '@/components/hooks/useAdminAuth';
 
 export default function AdminSettingsPage() {
   const [loading, setLoading] = useState(false);
@@ -14,34 +15,50 @@ export default function AdminSettingsPage() {
   }, []);
 
   async function checkAdminAuth() {
-    const adminSession = localStorage.getItem('admin_session');
-    if (!adminSession) {
-      router.push('/admin/login');
-      return;
-    }
-
-    const { data: { user } } = await sbClient.auth.getUser();
+    const { data: { user } } = await sbClient().auth.getUser();
     if (!user) {
-      localStorage.removeItem('admin_session');
       router.push('/admin/login');
       return;
     }
   }
 
-  async function handleCreateAdminUser(e: React.FormEvent) {
+  async function handleCreateAdminUser(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
     setLoading(true);
     setMessage('');
 
-    const formData = new FormData(e.currentTarget);
+  const formData = new FormData(e.currentTarget as HTMLFormElement);
     const email = formData.get('email') as string;
     const password = formData.get('password') as string;
     const firstName = formData.get('firstName') as string;
     const lastName = formData.get('lastName') as string;
 
     try {
-      // Create user with Supabase Auth
-      const { data, error: authError } = await sbClient.auth.signUp({
+      // Optionally create server-side via protected API (requires caller to be admin)
+      const createServer = (document.getElementById('create-server-side') as HTMLInputElement)?.checked;
+      if (createServer) {
+        const token = (await sbClient().auth.getSession()).data?.session?.access_token;
+        if (!token) throw new Error('No active session token');
+
+        const res = await fetch('/api/admin/create', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${token}`
+          },
+          body: JSON.stringify({ email, password, firstName, lastName })
+        });
+
+        const payload = await res.json();
+        if (!res.ok) throw new Error(payload?.error || 'Server create failed');
+        setMessage('Admin created server-side successfully');
+        (e.target as HTMLFormElement).reset();
+        setLoading(false);
+        return;
+      }
+
+      // Create user with Supabase Auth (client-side)
+  const { data, error: authError } = await sbClient().auth.signUp({
         email,
         password,
       });
@@ -50,7 +67,7 @@ export default function AdminSettingsPage() {
 
       if (data.user) {
         // Create profile with admin role
-        const { error: profileError } = await sbClient
+        const { error: profileError } = await sbClient()
           .from('profiles')
           .insert({
             id: data.user.id,
@@ -73,6 +90,32 @@ export default function AdminSettingsPage() {
     }
   }
 
+  // Build SQL for manual admin creation (idempotent)
+  function buildAdminSql(email: string, password: string, firstName: string, lastName: string) {
+    const safeEmail = email.replace(/'/g, "''");
+    const safeFirst = firstName.replace(/'/g, "''");
+    const safeLast = lastName.replace(/'/g, "''");
+    const safePass = password.replace(/'/g, "''");
+    return `-- Run as project owner in Supabase SQL editor\n\nINSERT INTO auth.users (id, email, encrypted_password, email_confirmed_at, created_at, updated_at, raw_app_meta_data, raw_user_meta_data)
+VALUES (gen_random_uuid(), '${safeEmail}', crypt('${safePass}', gen_salt('bf')), now(), now(), now(), '{"provider":"email"}', '{}')
+ON CONFLICT (email) DO NOTHING;\n\nINSERT INTO public.profiles (id, user_id, email, first_name, last_name, role, created_at)
+SELECT u.id, u.id, u.email, '${safeFirst}', '${safeLast}', 'admin', now() FROM auth.users u WHERE u.email = '${safeEmail}'
+AND NOT EXISTS (SELECT 1 FROM public.profiles p WHERE p.user_id = u.id);\n`;
+  }
+
+  async function handleGenerateSql(e: React.FormEvent) {
+    e.preventDefault();
+    const formData = new FormData(e.currentTarget as HTMLFormElement);
+    const email = formData.get('email') as string;
+    const password = formData.get('password') as string;
+    const firstName = formData.get('firstName') as string;
+    const lastName = formData.get('lastName') as string;
+    const sql = buildAdminSql(email, password, firstName, lastName);
+    // copy to clipboard
+    await navigator.clipboard.writeText(sql);
+    setMessage('Admin creation SQL copied to clipboard. Paste into Supabase SQL editor and run as project owner.');
+  }
+
   async function handleSystemMaintenance(action: string) {
     setLoading(true);
     setMessage('');
@@ -88,7 +131,7 @@ export default function AdminSettingsPage() {
           const thirtyDaysAgo = new Date();
           thirtyDaysAgo.setDate(thirtyDaysAgo.getDate() - 30);
           
-          const { error } = await sbClient
+          const { error } = await sbClient()
             .from('transactions')
             .delete()
             .eq('status', 'failed')
@@ -99,8 +142,8 @@ export default function AdminSettingsPage() {
           break;
         case 'reset_demo':
           // Reset demo data
-          await sbClient.from('transactions').delete().neq('id', '');
-          await sbClient.from('accounts').update({ available_balance: 1000 }).neq('id', '');
+          await sbClient().from('transactions').delete().neq('id', '');
+          await sbClient().from('accounts').update({ available_balance: 1000 }).neq('id', '');
           setMessage('Demo data reset completed.');
           break;
         default:
@@ -198,6 +241,19 @@ export default function AdminSettingsPage() {
                 >
                   {loading ? 'Creating...' : 'Create Admin User'}
                 </button>
+                <div className="flex items-center space-x-3 mt-2">
+                  <label className="inline-flex items-center">
+                    <input id="create-server-side" type="checkbox" className="form-checkbox h-4 w-4 text-blue-600" />
+                    <span className="ml-2 text-sm text-gray-700">Create server-side (requires admin)</span>
+                  </label>
+                  <button
+                    type="button"
+                    onClick={(e) => handleGenerateSql(e as any)}
+                    className="ml-auto px-4 py-2 bg-gray-100 text-gray-900 rounded-md hover:bg-gray-200"
+                  >
+                    Copy Admin SQL
+                  </button>
+                </div>
               </form>
             </div>
           </div>

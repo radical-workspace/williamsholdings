@@ -18,7 +18,7 @@ export default function AdminLoginPage() {
 
     try {
       // Sign in with Supabase
-      const { data, error: authError } = await sbClient.auth.signInWithPassword({
+  const { data, error: authError } = await sbClient().auth.signInWithPassword({
         email,
         password,
       });
@@ -30,7 +30,7 @@ export default function AdminLoginPage() {
 
       if (data.user) {
         // Check if user is admin
-        const { data: profile, error: profileError } = await sbClient
+  const { data: profile, error: profileError } = await sbClient()
           .from('profiles')
           .select('role')
           .eq('user_id', data.user.id)
@@ -38,12 +38,11 @@ export default function AdminLoginPage() {
 
         if (profileError || !profile || profile.role !== 'admin') {
           setError('Access denied. Admin privileges required.');
-          await sbClient.auth.signOut();
+          await sbClient().auth.signOut();
           return;
         }
 
-        // Store admin session
-        localStorage.setItem('admin_session', 'true');
+        // Redirect to admin dashboard (server-side session is used)
         router.push('/admin/dashboard');
       }
     } catch (err: any) {

@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { sbClient } from '@/lib/supabase/client';
+import useAdminAuth from '@/components/hooks/useAdminAuth';
 
 interface Transaction {
   id: string;
@@ -34,20 +35,15 @@ export default function AdminTransactionsPage() {
   const router = useRouter();
 
   useEffect(() => {
+    // centralized auth check
     checkAdminAuth();
     loadTransactions();
   }, []);
 
   async function checkAdminAuth() {
-    const adminSession = localStorage.getItem('admin_session');
-    if (!adminSession) {
-      router.push('/admin/login');
-      return;
-    }
-
-    const { data: { user } } = await sbClient.auth.getUser();
+    // use the shared hook instead of localStorage; keep runtime check for safety
+    const { data: { user } } = await sbClient().auth.getUser();
     if (!user) {
-      localStorage.removeItem('admin_session');
       router.push('/admin/login');
       return;
     }
@@ -55,7 +51,7 @@ export default function AdminTransactionsPage() {
 
   async function loadTransactions() {
     try {
-      const { data, error } = await sbClient
+  const { data, error } = await sbClient()
         .from('transactions')
         .select(`
           *,
@@ -81,7 +77,7 @@ export default function AdminTransactionsPage() {
 
   async function handleUpdateTransactionStatus(transactionId: string, newStatus: string) {
     try {
-      const { error } = await sbClient
+      const { error } = await sbClient()
         .from('transactions')
         .update({ status: newStatus })
         .eq('id', transactionId);
@@ -103,7 +99,7 @@ export default function AdminTransactionsPage() {
     }
 
     try {
-      const { error } = await sbClient
+      const { error } = await sbClient()
         .from('transactions')
         .delete()
         .eq('id', transactionId);
@@ -124,7 +120,9 @@ export default function AdminTransactionsPage() {
       transaction.accounts?.account_number.toLowerCase().includes(searchTerm.toLowerCase()) ||
       transaction.description.toLowerCase().includes(searchTerm.toLowerCase());
 
-    const matchesStatus = statusFilter === 'all' || transaction.status === statusFilter;
+  // defend against missing status in rows
+  const txStatus = transaction.status ?? 'pending';
+  const matchesStatus = statusFilter === 'all' || txStatus === statusFilter;
     const matchesType = typeFilter === 'all' || transaction.type === typeFilter;
 
     return matchesSearch && matchesStatus && matchesType;
@@ -192,6 +190,7 @@ export default function AdminTransactionsPage() {
             </div>
             <div>
               <select
+                aria-label="Filter transactions by status"
                 value={statusFilter}
                 onChange={(e) => setStatusFilter(e.target.value)}
                 className="px-4 py-2 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500"
@@ -204,6 +203,7 @@ export default function AdminTransactionsPage() {
             </div>
             <div>
               <select
+                aria-label="Filter transactions by type"
                 value={typeFilter}
                 onChange={(e) => setTypeFilter(e.target.value)}
                 className="px-4 py-2 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500"
@@ -284,8 +284,9 @@ export default function AdminTransactionsPage() {
                       </span>
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap">
-                      <span className={`inline-flex px-2 py-1 text-xs font-semibold rounded-full ${getStatusColor(transaction.status)}`}>
-                        {transaction.status}
+                      { /* defensive render in case status missing */ }
+                      <span className={`inline-flex px-2 py-1 text-xs font-semibold rounded-full ${getStatusColor(transaction.status ?? 'pending')}`}>
+                        {transaction.status ?? 'pending'}
                       </span>
                     </td>
                     <td className="px-6 py-4 text-sm text-gray-900 max-w-xs truncate">
@@ -328,6 +329,7 @@ export default function AdminTransactionsPage() {
                 <div>
                   <label className="block text-sm font-medium text-gray-700">Status</label>
                   <select
+                    aria-label="Edit transaction status"
                     defaultValue={selectedTransaction.status}
                     onChange={(e) => handleUpdateTransactionStatus(selectedTransaction.id, e.target.value)}
                     className="mt-1 block w-full border border-gray-300 rounded-md px-3 py-2"

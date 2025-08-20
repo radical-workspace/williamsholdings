@@ -13,3 +13,4 @@ export function sbClient() {
   _c = createBrowserClient(url, key); // <-- stores session in cookies (what the server reads)
   return _c;
 }
+
