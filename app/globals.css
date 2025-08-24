@@ -1,3 +1,7 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
 :root { --brand:#059669; }
 html, body {
   background-color: #f8fafc; /* slate-50 */
