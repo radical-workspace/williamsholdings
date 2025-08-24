@@ -49,42 +49,56 @@ export default async function Dashboard() {
   const masked = acct.length >= 6 ? `${acct.slice(0,4)}••••${acct.slice(-2)}` : acct;
 
   return (
-    <div className="space-y-5">
+    <div className="max-w-6xl mx-auto space-y-8 p-4">
       {/* HERO */}
-      <section className="hero">
-        <GreetingClock name={name} />
-        <div className="mt-6">
-          <div className="muted">Available Balance</div>
-          <div className="mt-1 text-4xl font-extrabold">{formatMoney(balance, currency)}</div>
-        </div>
-
-        <div className="mt-5 rounded-2xl bg-white/10 p-4">
-          <div className="muted text-sm">Your Account Number</div>
-          <div className="mt-1 flex items-center justify-between">
-            <div className="text-lg font-semibold tracking-wider">{masked}</div>
-            <div className="flex gap-2">
-              <a href="/transactions" className="btn btn-white/10">Transactions</a>
-              <a href="/deposit" className="btn btn-white/10">Top up</a>
+      <section>
+        <div className="rounded-2xl bg-gradient-to-br from-blue-600 to-sky-500 text-white p-6 shadow-lg">
+          <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+            <div>
+              <GreetingClock name={name} />
+              <div className="mt-4 text-sm opacity-90">Available Balance</div>
+              <div className="mt-1 text-3xl md:text-4xl font-extrabold tracking-tight">{formatMoney(balance, currency)}</div>
+              <div className="mt-2 text-sm opacity-90">Your Account Number: <span className="font-mono">{masked}</span></div>
             </div>
-          </div>
-          <div className="mt-3">
-            <span className={`badge ${status === 'Active' ? 'badge-active' : 'badge-inactive'}`}>{status}</span>
+
+            <div className="flex items-center gap-3">
+              <a href="/transactions" className="inline-flex items-center px-4 py-2 bg-white/20 hover:bg-white/30 rounded-full text-white font-medium shadow-sm">Transactions</a>
+              <a href="/deposit" className="inline-flex items-center px-4 py-2 bg-white/10 hover:bg-white/20 rounded-full text-white font-medium shadow-sm">Top up</a>
+            </div>
           </div>
         </div>
       </section>
 
       {/* ACTION TILES */}
-      <section className="space-y-2">
-        <h2 className="text-lg font-semibold">What would you like to do today?</h2>
-        <p className="text-slate-600 text-sm">Choose from our popular actions below</p>
+      <section>
+        <h2 className="text-2xl font-semibold">What would you like to do today?</h2>
+        <p className="text-slate-600 mt-1">Choose from our popular actions below</p>
 
-        <div className="grid grid-cols-2 gap-3">
-          <a href="/profile" className="tile"><h3>Account Info</h3><p>View and edit your details</p></a>
-          <a href="/send" className="tile"><h3>Send Money</h3><p>Transfer to wallets or banks</p></a>
-          <a href="/deposit" className="tile"><h3>Deposit</h3><p>BTC • USDT • USDC • USD</p></a>
-          <a href="/withdraw" className="tile"><h3>Withdraw</h3><p>Select any payout method</p></a>
-          <a href="/plans" className="tile"><h3>Investment Plans</h3><p>Daily ROI options</p></a>
-          <a href="/active-investments" className="tile"><h3>Active Investments</h3><p>Track performance</p></a>
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 mt-6">
+          <a href="/profile" className="block p-4 rounded-lg border hover:shadow-md transition bg-white">
+            <h3 className="font-semibold text-lg">Account Info</h3>
+            <p className="text-sm text-slate-600 mt-2">View and edit your details</p>
+          </a>
+          <a href="/transactions" className="block p-4 rounded-lg border hover:shadow-md transition bg-white">
+            <h3 className="font-semibold text-lg">Transactions</h3>
+            <p className="text-sm text-slate-600 mt-2">View your recent transactions</p>
+          </a>
+          <a href="/cards" className="block p-4 rounded-lg border hover:shadow-md transition bg-white">
+            <h3 className="font-semibold text-lg">Cards</h3>
+            <p className="text-sm text-slate-600 mt-2">Apply for a bank card (coming soon)</p>
+          </a>
+          <a href="/deposit" className="block p-4 rounded-lg border hover:shadow-md transition bg-white">
+            <h3 className="font-semibold text-lg">Deposit</h3>
+            <p className="text-sm text-slate-600 mt-2">Add funds to your account</p>
+          </a>
+          <a href="/withdraw" className="block p-4 rounded-lg border hover:shadow-md transition bg-white">
+            <h3 className="font-semibold text-lg">Withdraw</h3>
+            <p className="text-sm text-slate-600 mt-2">Withdraw to bank or cards</p>
+          </a>
+          <a href="/support" className="block p-4 rounded-lg border hover:shadow-md transition bg-white">
+            <h3 className="font-semibold text-lg">Support</h3>
+            <p className="text-sm text-slate-600 mt-2">Contact our helpdesk</p>
+          </a>
         </div>
       </section>
     </div>
