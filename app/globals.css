@@ -4,7 +4,7 @@
 
 :root { --brand:#059669; }
 html, body {
-  background-color: #f8fafc; /* slate-50 */
+  background-color: #fcf8fb; /* slate-50 */
   color: #0f172a; /* slate-900 */
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
