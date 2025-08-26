@@ -1,5 +1,5 @@
 import './globals.css';
-import ThemeToggle from '../components/ThemeToggle';
+import Header from '../components/Header';
 
 const BRAND = process.env.NEXT_PUBLIC_BRAND_NAME || 'WilliamsHoldings';
 const PRIMARY = process.env.NEXT_PUBLIC_PRIMARY_HEX || '#059669';
@@ -20,10 +20,10 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       </head>
       <body>
         <div className="mx-auto min-h-screen max-w-7xl px-4 sm:px-6 lg:px-8">
-          <header className="w-full py-4 flex justify-end items-center">
-            <ThemeToggle />
-          </header>
-          {children}
+          <Header />
+          <main>
+            {children}
+          </main>
         </div>
       </body>
     </html>

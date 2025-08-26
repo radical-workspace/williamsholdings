@@ -71,7 +71,7 @@ export default function SignUpClient(){
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-900 via-purple-900 to-indigo-900 flex items-center justify-center p-4">
+    <div className="min-h-screen -mx-4 sm:-mx-6 lg:-mx-8 bg-gradient-to-br from-blue-900 via-purple-900 to-indigo-900 flex items-center justify-center p-4">
       <div className="w-full max-w-md">
         <div className="text-center mb-6">
           <Image src="/logo.svg" alt="WilliamsHoldings logo" width={48} height={48} className="mx-auto" />
