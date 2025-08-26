@@ -9,7 +9,7 @@ export default function Cards(){
 			</div>
 
 			<section>
-				<h2 className="" style={{ marginTop: 0 }}>Apply for a WilliamsHoldings Visa</h2>
+				<h2 className="mt-0">Apply for a WilliamsHoldings Visa</h2>
 				<p>Our Visa card works worldwide. Physical and virtual cards supported. No annual fee for qualifying accounts.</p>
 				<div className="mt-3">
 					<ApplyCardForm />
