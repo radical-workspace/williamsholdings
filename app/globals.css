@@ -1,28 +1,41 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
-
-/* Theme variables */
-:root{
+:root {
+  /* Core theme tokens used by tailwind.config.ts */
   --bg: #fcf8fb;
   --surface: #ffffff;
   --text: #0f172a;
   --muted: #475569;
-  --brand: #059669;
-  --card-bg: #ffffff;
+  --primary: #0B3B66;
+  --primary-foreground: #ffffff;
+  --accent: #0EA5E9;
+  --ring: #60A5FA;
+
+  --success: #22C55E;
+  --warning: #be0dc5;
+  --danger: #EF4444;
+  --info: #0EA5E9;
+
+  --card-bg: var(--surface);
+  --card-shadow: 0 4px 16px rgba(2, 6, 23, 0.06);
+  --radius: 14px;
   --navbar-bg: rgba(255,255,255,0.9);
 }
 
-/* Dark theme overrides when .theme-dark is present on <html> */
-.theme-dark{
+/* Dark theme uses the `dark` class on <html> (tailwind darkMode: 'class') */
+.dark {
   --bg: #071026;
   --surface: #0b1220;
   --text: #e6eef8;
   --muted: #9aa6b2;
-  --brand: #34d399;
-  --card-bg: #071026;
+  --primary: #0b99a5;
+  --primary-foreground: #0b1220;
+  --card-bg: var(--surface);
+  --card-shadow: 0 8px 30px rgba(0,0,0,0.35);
   --navbar-bg: rgba(7,16,34,0.8);
 }
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
 
 html, body {
   background-color: var(--bg);
@@ -63,16 +76,16 @@ html, body {
   text-align: center;
   display: inline-block;
 }
-.btn-primary { background:var(--brand); color:#fff; }
+.btn-primary { background:var(--primary); color:var(--primary-foreground); }
 .btn-white\/10 { border: 1px solid rgba(255,255,255,0.2); background: rgba(255,255,255,0.1); color: #fff; }
 .btn-ghost { background-color: #f1f5f9; color: #1e293b; }
 .input { width:100%; border-radius:1rem; border:1px solid #e6edf3; padding:0.75rem; }
 
 /* Brand helpers */
-.text-brand { color:var(--brand); }
-.bg-brand { background:var(--brand); }
+.text-brand { color:var(--primary); }
+.bg-brand { background:var(--primary); }
 
-/* Hero (blue gradient like your reference) */
+/* Hero (blue gradient) */
 .hero {
   border-radius: 1.5rem;
   padding: 1.25rem;
@@ -86,12 +99,12 @@ html, body {
 
 /* Tiles */
 .tile { border-radius: 1rem; padding:1rem; background:var(--surface); box-shadow:0 4px 6px rgba(15,23,42,0.04); transition: box-shadow .15s ease; }
-.tile:hover { box-shadow:0 10px 15px rgba(15,23,42,0.06); }
+.tile:hover { box-shadow:0 10px 15px rgba(15,23,42,0.06); transform: translateY(-3px); }
 .tile h3 { font-weight:600; }
-.tile p { font-size:0.875rem; color:#475569; margin-top:0.25rem; }
+.tile p { font-size:0.875rem; color:var(--muted); margin-top:0.25rem; }
 
 /* Bottom nav */
 .navbar { position:fixed; bottom:0; left:0; right:0; border-top:1px solid rgba(15,23,42,0.06); background: var(--navbar-bg); -webkit-backdrop-filter: blur(6px); backdrop-filter: blur(6px); }
 .navbar-inner { margin:0 auto; display:grid; max-width:48rem; grid-template-columns:repeat(4,1fr); text-align:center; }
 .nav-item { padding:0.75rem; color:#334155; }
-.nav-item-active { color:var(--brand); font-weight:700; }
+.nav-item-active { color:var(--primary); font-weight:700; }
