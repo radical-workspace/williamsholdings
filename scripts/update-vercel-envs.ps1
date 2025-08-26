@@ -74,7 +74,7 @@ foreach ($line in $lines){
         } else {
             # Escape double quotes in value
             $escapedVal = $val -replace '"', '""'
-            $applyScript += "vercel env add $name \"$escapedVal\" $e --yes"
+            $applyScript += "vercel env add $name `"$($escapedVal)`" $e --yes"
         }
     }
     $applyScript += "`n"
