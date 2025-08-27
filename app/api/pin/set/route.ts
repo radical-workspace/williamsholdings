@@ -51,12 +51,15 @@ export async function POST(req: Request) {
 
     if (profileError && profileError.code === 'PGRST116') {
       // Profile doesn't exist, create it
-      console.log('Creating profile for user:', user.id);
+      console.log('Creating profile for user:', user.id)
+      // Extract first name from email (part before @) or use default
+      const firstName = user.email?.split('@')[0] || 'User'
+      
       const { data: newProfile, error: createError } = await supabase
         .from('profiles')
         .insert({ 
           user_id: user.id, 
-          first_name: user.email?.split('@')[0] || 'User',
+          first_name: firstName,
           pin_hash: hash(pin)
         })
         .select()

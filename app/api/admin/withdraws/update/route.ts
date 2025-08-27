@@ -8,8 +8,15 @@ export async function POST(req: Request) {
     if (!id || !action) return NextResponse.json({ error: 'id and action required' }, { status: 400 })
     if (!supabaseAdmin) return NextResponse.json({ error: 'SUPABASE_SERVICE_ROLE_KEY not configured' }, { status: 500 })
 
-    const status = action === 'approve' ? 'approved' : action === 'reject' ? 'rejected' : null
-    if (!status) return NextResponse.json({ error: 'invalid action' }, { status: 400 })
+    // Determine the status based on the action
+    let status: string
+    if (action === 'approve') {
+      status = 'approved'
+    } else if (action === 'reject') {
+      status = 'rejected'
+    } else {
+      return NextResponse.json({ error: 'invalid action' }, { status: 400 })
+    }
 
     const { data, error } = await supabaseAdmin.from('withdraw_requests').update({ status, admin_note: note || null, processed_at: new Date().toISOString() }).eq('id', id).select().single()
     if (error) return NextResponse.json({ error: error.message }, { status: 500 })
