@@ -2,7 +2,6 @@ import { sbServer } from '@/lib/supabase/server';
 
 export const dynamic = 'force-dynamic'
 import GreetingClock from '@/components/GreetingClock';
-import { KpiCard } from '@/components/KpiCard';
 
 function formatMoney(amount: number, currency: string) {
   try { return new Intl.NumberFormat('en-US', { style: 'currency', currency }).format(amount); }
@@ -74,16 +73,6 @@ export default async function Dashboard() {
         </div>
       </section>
 
-      {/* KPI PANELS */}
-      <section>
-        <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
-          <KpiCard label="Total Users" value={13} tone="info" actionLabel="View" actionHref="/admin/users" />
-          <KpiCard label="Total Accounts" value={0} tone="warning" />
-          <KpiCard label="Total Balance" value={formatMoney(balance, currency)} tone="success" />
-          <KpiCard label="Total Transactions" value={0} tone="danger" />
-        </div>
-      </section>
-
       {/* ACTION TILES */}
       <section>
         <div className="flex items-center justify-between">
@@ -93,8 +82,8 @@ export default async function Dashboard() {
           </div>
         </div>
 
-  <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 mt-6">
-          <a href="/profile" className="group block p-5 rounded-xl border border-slate-100 bg-white hover:shadow-lg transform hover:-translate-y-1 transition focus:outline-none focus:ring-2 focus:ring-ring">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 mt-6">
+          <a href="/profile" className="group block p-5 rounded-xl border border-slate-100 bg-white hover:shadow-lg transform hover:-translate-y-1 transition">
             <div className="flex items-start gap-4">
               <div className="w-10 h-10 rounded-md bg-slate-50 flex items-center justify-center text-slate-700">
                 <svg xmlns="http://www.w3.org/2000/svg" className="w-5 h-5" viewBox="0 0 20 20" fill="currentColor"><path d="M10 2a4 4 0 100 8 4 4 0 000-8zM2 18a8 8 0 1116 0H2z" /></svg>
@@ -167,17 +156,6 @@ export default async function Dashboard() {
           </a>
         </div>
       </section>
-
-      {/* RECENT USERS PANEL */}
-      <section>
-        <div className="rounded-xl border border-muted/60 bg-surface shadow-card">
-          <div className="flex items-center justify-between px-5 py-3 border-b border-muted/60">
-            <h3 className="font-medium">Recent Users</h3>
-            <a className="text-sm text-accent hover:underline focus:outline-none focus:ring-2 focus:ring-ring rounded px-2 py-1">View all</a>
-          </div>
-          <div className="p-5 text-sm text-text/80">No users yet.</div>
-        </div>
-  </section>
     </div>
   );
 }
