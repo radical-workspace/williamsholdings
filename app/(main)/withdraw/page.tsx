@@ -19,7 +19,7 @@ export default function WithdrawPage() {
     <div className="space-y-4">
       <h1 className="text-xl font-semibold">Withdraw</h1>
       <div className="card space-y-3">
-        <select className="input" value={method} onChange={e=>setMethod(e.target.value)} required>
+  <select aria-label="Select payout method" className="input" value={method} onChange={e=>setMethod(e.target.value)} required>
           <option value="">Select payout method</option>
           {methods.map((m:any) => <option key={m.id} value={m.id}>{m.label || m.method_code}</option>)}
         </select>

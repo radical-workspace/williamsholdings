@@ -37,7 +37,7 @@ export default function PayoutMethodsPage() {
     <div className="space-y-4">
       <h1 className="text-xl font-semibold">Payout Methods</h1>
       <form onSubmit={save} className="card space-y-3">
-        <select className="input" value={methodCode} onChange={e=>setMethodCode(e.target.value)}>
+  <select aria-label="Payout method" className="input" value={methodCode} onChange={e=>setMethodCode(e.target.value)}>
           <option value="BTC">Bitcoin (BTC)</option>
           <option value="USDT_TRC20">Tether USDT (TRC20)</option>
           <option value="USDT_ERC20">Tether USDT (ERC20)</option>
@@ -50,7 +50,7 @@ export default function PayoutMethodsPage() {
             <input className="input" value={label} onChange={e=>setLabel(e.target.value)} placeholder="Label (e.g., My BTC)" />
             <input className="input" value={address} onChange={e=>setAddress(e.target.value)} placeholder="Wallet address" required />
             {(methodCode.includes('USDT') || methodCode.includes('USDC')) && (
-              <select className="input" value={network} onChange={e=>setNetwork(e.target.value)} required>
+              <select aria-label="Payout network" className="input" value={network} onChange={e=>setNetwork(e.target.value)} required>
                 <option value="">Select network</option>
                 <option value="TRON">TRC20 (TRON)</option>
                 <option value="ETH">ERC20 (Ethereum)</option>

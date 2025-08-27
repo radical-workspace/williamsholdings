@@ -17,6 +17,7 @@ export default function DepositPage() {
   const [network, setNetwork] = useState('');
   const [amount, setAmount] = useState('');
   const [note, setNote] = useState('');
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   // Try to load real channels if your API exists; otherwise fallback
   useEffect(() => {
@@ -35,13 +36,13 @@ export default function DepositPage() {
     <div className="space-y-4">
       <h1 className="text-xl font-semibold">Deposit</h1>
       <div className="card space-y-3">
-        <select className="input" value={channel} onChange={e=>setChannel(e.target.value)} required>
+        <select aria-label="Deposit method" className="input" value={channel} onChange={e=>setChannel(e.target.value)} required>
           <option value="">Select method</option>
           {channels.map(c => <option key={c.code} value={c.code}>{c.name}</option>)}
         </select>
 
         {(channel.includes('USDT') || channel.includes('USDC')) && (
-          <select className="input" value={network} onChange={e=>setNetwork(e.target.value)} required>
+          <select aria-label="Deposit network" className="input" value={network} onChange={e=>setNetwork(e.target.value)} required>
             <option value="">Select network</option>
             <option value="TRON">TRC20 (TRON)</option>
             <option value="ETH">ERC20 (Ethereum)</option>
@@ -53,12 +54,41 @@ export default function DepositPage() {
 
         <input value={note} onChange={e=>setNote(e.target.value)} placeholder="Payment reference / note (optional)" className="input" />
 
-        <button className="btn btn-primary w-full"
-          onClick={() => alert('Deposit intent UI is ready. Connect to your API later to generate addresses.')}>
-          Continue
+        <button className="btn btn-primary w-full" onClick={async () => {
+          if (!channel || Number(amount) <= 0) {
+            alert('Please select a deposit method and enter a valid amount.');
+            return;
+          }
+          setIsSubmitting(true);
+          try {
+            const payload = { amount: Number(amount), currency: 'USD', source: channel, note: note || null };
+            const res = await fetch('/api/db/deposits', {
+              method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(payload)
+            });
+            const body = await res.json();
+            if (!res.ok) {
+              alert(body?.error || 'Deposit failed. Try again later.');
+            } else {
+              alert('Deposit intent created. Check your deposit requests for status.');
+              // Optionally clear form
+              setAmount(''); setNote(''); setChannel(''); setNetwork('');
+            }
+          } catch (err) {
+            console.error(err);
+            alert('Network error. Try again later.');
+          } finally {
+            setIsSubmitting(false);
+          }
+        }} disabled={!amount || isSubmitting}>
+          {isSubmitting ? 'Processing…' : 'Continue'}
         </button>
       </div>
       <p className="text-sm text-slate-500">BTC, USDT, USDC and USD bank transfer supported.</p>
     </div>
   );
+}
+
+// Add handler below the component (keeps top-level component code tidy)
+async function handleContinue(this: any) {
+  // This function is hoisted into the component's closure by binding in JSX.
 }
