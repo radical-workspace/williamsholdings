@@ -12,14 +12,30 @@ export default function SignInClient(){
     const sb=sbClient(); const {error}=await sb.auth.signInWithPassword({email,password}); setLoading(false);
     if(error){setError(error.message);return;} r.push(`/auth/pin?redirectedFrom=${encodeURIComponent(from)}`);
   }
-  return (<div className="min-h-screen flex items-center justify-center p-4"><div className="w-full max-w-sm space-y-4 card">
-    <div className="text-center space-y-1"><Image src="/logo.svg" alt="WilliamsHoldings logo" width={40} height={40} className="mx-auto"/><h1 className="text-xl font-semibold">Sign in</h1></div>
-    <form onSubmit={submit} className="space-y-3">
-      <input className="input" placeholder="Email" value={email} onChange={e=>setEmail(e.target.value)} required/>
-      <input className="input" type="password" placeholder="Password" value={password} onChange={e=>setPassword(e.target.value)} required/>
-      {error&&<div className="text-red-600 text-sm">{error}</div>}
-      <button className="btn btn-primary w-full" disabled={loading}>{loading?'Signing in…':'Sign in'}</button>
-    </form>
-    <div className="text-sm text-slate-600 text-center">No account? <a className="underline" href={`/auth/sign-up?redirectedFrom=${encodeURIComponent(from)}`}>Create one</a></div>
-  </div></div>);
+  return (
+    <div className="min-h-screen flex items-center justify-center p-6 bg-gradient-to-b from-slate-50 to-white dark:from-slate-900 dark:to-slate-800">
+      <div className="w-full max-w-md space-y-6">
+        <div className="text-center">
+          <Image src="/favicon-wh.svg" alt="WH logo" width={56} height={56} className="mx-auto"/>
+          <h1 className="mt-4 text-2xl font-extrabold">Baron WilliamHoldings</h1>
+          <p className="text-sm text-slate-500">Secure, premium banking with WH</p>
+        </div>
+        <div className="card p-6 shadow-lg">
+          <form onSubmit={submit} className="space-y-4">
+            <label className="block">
+              <span className="text-sm font-medium text-slate-700">Email</span>
+              <input className="input mt-1" placeholder="you@domain.com" value={email} onChange={e=>setEmail(e.target.value)} required/>
+            </label>
+            <label className="block">
+              <span className="text-sm font-medium text-slate-700">Password</span>
+              <input className="input mt-1" type="password" placeholder="Your password" value={password} onChange={e=>setPassword(e.target.value)} required/>
+            </label>
+            {error&&<div className="text-red-600 text-sm">{error}</div>}
+            <button className="btn btn-primary w-full py-3 text-white font-semibold bg-amber-500 hover:bg-amber-600" disabled={loading}>{loading?'Signing in…':'Sign in'}</button>
+          </form>
+          <div className="mt-4 text-center text-sm text-slate-600">No account? <a className="underline" href={`/auth/sign-up?redirectedFrom=${encodeURIComponent(from)}`}>Create one</a></div>
+        </div>
+      </div>
+    </div>
+  );
 }
