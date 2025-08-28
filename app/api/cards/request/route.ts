@@ -18,6 +18,17 @@ export async function POST(req: Request) {
 
     if (!supabaseAdmin) return NextResponse.json({ error: 'SUPABASE_SERVICE_ROLE_KEY not configured' }, { status: 500 })
 
+    // Ensure user has minimum balance to purchase a card
+    const MIN_CARD_PURCHASE = 1000;
+    if (purchaseAmount !== undefined) {
+      const { data: acct, error: acctErr } = await supabaseAdmin.from('accounts').select('available_balance').eq('user_id', userId).limit(1).single()
+      if (acctErr) return NextResponse.json({ error: acctErr.message }, { status: 500 })
+      const available = Number(acct?.available_balance || 0)
+      if (Number(purchaseAmount) > available || available < MIN_CARD_PURCHASE) {
+        return NextResponse.json({ error: 'insufficient_balance', message: `You need at least $${MIN_CARD_PURCHASE} available to request a card.` }, { status: 400 })
+      }
+    }
+
     const payload: any = { user_id: userId, name, status: 'pending' }
     if (cardType) payload.card_type = cardType
     if (purchaseAmount !== undefined) payload.purchase_amount = purchaseAmount

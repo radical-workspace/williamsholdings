@@ -30,8 +30,13 @@ export async function POST(req: Request) {
     if (!userId) return NextResponse.json({ error: 'authentication required' }, { status: 401 })
 
     if (!supabaseAdmin) return NextResponse.json({ error: 'SUPABASE_SERVICE_ROLE_KEY not configured' }, { status: 500 })
+  // Check user's available balance
+  const { data: accountsData, error: acctErr } = await supabaseAdmin.from('accounts').select('id, available_balance').eq('user_id', userId).limit(1).single();
+  if (acctErr) return NextResponse.json({ error: acctErr.message }, { status: 500 })
+  const available = Number(accountsData?.available_balance || 0)
+  if (Number(amount) > available) return NextResponse.json({ error: 'insufficient_balance', message: 'Insufficient balance for withdrawal' }, { status: 400 })
 
-    const payload = {
+  const payload = {
       user_id: userId,
       amount,
       currency: currency || 'USD',

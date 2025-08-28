@@ -1,0 +1,15 @@
+The CJS build of Vite's Node API is deprecated. See https://vite.dev/guide/troubleshooting.html#vite-cjs-node-api-deprecated for more details.
+
+[7m[1m[36m RUN [39m[22m[27m [36mv1.6.1[39m [90mC:/Users/HP ELITEBOOK 1030 G3/williamsholdings[39m
+
+ [32mΓ£ô[39m tests/quick.test.js[2m > [22msanity check
+ [32mΓ£ô[39m tests/admin-approval.test.ts[2m > [22madmin approval helpers[2m > [22mcredits account and creates transaction on deposit approve
+ [32mΓ£ô[39m tests/admin-approval.test.ts[2m > [22madmin approval helpers[2m > [22mdebts account and creates transaction on withdraw approve
+ [32mΓ£ô[39m tests/admin-approval.test.ts[2m > [22madmin approval helpers[2m > [22mthrows on withdraw approve when insufficient balance
+ [32mΓ£ô[39m tests/admin-approval.test.ts[2m > [22madmin approval helpers[2m > [22mpropagates DB errors during deposit approval
+
+[2m Test Files [22m [1m[32m2 passed[39m[22m[90m (2)[39m
+[2m      Tests [22m [1m[32m5 passed[39m[22m[90m (5)[39m
+[2m   Start at [22m 15:51:13
+[2m   Duration [22m 1.77s[2m (transform 209ms, setup 0ms, collect 423ms, tests 44ms, environment 1ms, prepare 1.46s)[22m
+
