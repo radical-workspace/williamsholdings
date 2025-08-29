@@ -72,7 +72,7 @@ export default function DepositPage() {
 
         <div className="space-y-2">
           <div className="flex items-center gap-2">
-            <input value={reference} readOnly className="input flex-1" />
+            <input value={reference} readOnly className="input flex-1" placeholder="Reference" />
             <button className="btn" onClick={() => navigator.clipboard.writeText(reference)}>Copy</button>
           </div>
 
