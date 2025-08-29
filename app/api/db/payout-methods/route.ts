@@ -3,9 +3,16 @@ import { sbServerRW, supabaseAdmin } from '../../../../lib/supabase/server'
 
 export async function GET() {
   try {
-    if (!supabaseAdmin) return NextResponse.json({ items: [], warning: 'SUPABASE_SERVICE_ROLE_KEY not configured' })
-    // For server-rendered GET without session, return empty list to avoid leaking data
-    return NextResponse.json({ items: [] })
+  if (!supabaseAdmin) return NextResponse.json({ items: [], warning: 'SUPABASE_SERVICE_ROLE_KEY not configured' })
+
+  const sb = sbServerRW()
+  const { data: sessionData } = await sb.auth.getSession()
+  const userId = sessionData?.session?.user?.id
+  if (!userId) return NextResponse.json({ items: [] })
+
+  const { data, error } = await supabaseAdmin.from('payout_methods').select('*').eq('user_id', userId).order('created_at', { ascending: false })
+  if (error) return NextResponse.json({ error: error.message }, { status: 500 })
+  return NextResponse.json({ items: data || [] })
   } catch (err: any) {
     return NextResponse.json({ error: err.message || String(err) }, { status: 500 })
   }
