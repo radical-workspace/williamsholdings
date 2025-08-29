@@ -70,11 +70,32 @@ export default function DepositPage() {
         <input type="number" min="0" step="0.01" value={amount} onChange={e=>setAmount(e.target.value)}
                placeholder="Amount (USD)" className="input" />
 
-        <div className="space-y-2">
+        <div className="space-y-3">
           <div className="flex items-center gap-2">
-            <input value={reference} readOnly className="input flex-1" placeholder="Reference" />
-            <button className="btn" onClick={() => navigator.clipboard.writeText(reference)}>Copy</button>
+            <input value={reference} readOnly className="input flex-1 font-mono text-sm" placeholder="Reference" />
+            <button aria-label="Copy reference" title="Copy reference" className="btn" onClick={() => navigator.clipboard.writeText(reference)}>Copy</button>
           </div>
+
+          {/* Show company payment instructions for the selected channel so user knows where to send funds */}
+          {channel && (
+            <div className="rounded-md border bg-white/50 p-3 text-sm">
+              <div className="font-medium">Payment instructions</div>
+              <div className="mt-1 text-slate-600">
+                {(() => {
+                  const infoAny: any = COMPANY_PAYMENT_INFO[channel as keyof typeof COMPANY_PAYMENT_INFO] || {};
+                  if (infoAny && infoAny.address) return (<div>Send {channel} to <span className="font-mono">{String(infoAny.address)}</span></div>);
+                  if (infoAny && infoAny.accountNumber) return (
+                    <div>
+                      <div>{infoAny.bankName} — {infoAny.name}</div>
+                      <div>Account: <span className="font-mono">{infoAny.accountNumber}</span></div>
+                      <div>Routing: <span className="font-mono">{infoAny.routing}</span></div>
+                    </div>
+                  );
+                  return (<div>Follow the payment instructions provided after you continue.</div>);
+                })()}
+              </div>
+            </div>
+          )}
 
           <input value={txProof} onChange={e=>setTxProof(e.target.value)} placeholder="Proof / Transaction ID (optional)" className="input" />
 
