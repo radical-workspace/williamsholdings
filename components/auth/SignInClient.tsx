@@ -17,7 +17,7 @@ export default function SignInClient(){
       <div className="w-full max-w-md space-y-6">
         <div className="text-center">
           <Image src="/favicon-wh.svg" alt="WH logo" width={56} height={56} className="mx-auto"/>
-          <h1 className="mt-4 text-2xl font-extrabold">Baron WilliamHoldings</h1>
+          <h1 className="mt-4 text-2xl font-extrabold">WilliamHoldings</h1>
           <p className="text-sm text-slate-500">Secure, premium banking with WH</p>
         </div>
         <div className="card p-6 shadow-lg">

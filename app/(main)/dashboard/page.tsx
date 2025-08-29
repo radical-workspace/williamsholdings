@@ -1,4 +1,5 @@
 import { sbServer } from '@/lib/supabase/server';
+import Image from 'next/image';
 
 export const dynamic = 'force-dynamic'
 import GreetingClock from '@/components/GreetingClock';
@@ -55,6 +56,13 @@ export default async function Dashboard() {
         <div className="rounded-2xl bg-gradient-to-br from-blue-600 to-sky-500 text-white p-6 shadow-xl ring-1 ring-white/10">
           <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-6">
             <div className="flex-1">
+              {/* Welcome banner */}
+              <div className="text-center mb-4">
+                <div className="mx-auto w-20 h-20 rounded-2xl bg-white/10 flex items-center justify-center shadow-lg">
+                  <Image src="/favicon-wh.svg" alt="WH" width={48} height={48} className="w-12 h-12" />
+                </div>
+                <h1 className="mt-3 text-xl md:text-2xl font-extrabold tracking-tight">WELCOME TO WILLIAMS HOLDINGS BANKING</h1>
+              </div>
               <div className="flex items-center gap-3">
                 <GreetingClock name={name} />
                 <span className={`text-sm px-3 py-1 rounded-full font-medium ${status === 'Active' ? 'bg-white/20' : 'bg-white/10'}`}>{status}</span>
