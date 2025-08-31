@@ -1,13 +1,13 @@
 "use client"
 import React, { useEffect, useState } from 'react'
-import AdminConfirmModal from '@/components/AdminConfirmModal'
-import AdminNoteModal from '@/components/AdminNoteModal'
 import TextField from '@mui/material/TextField'
 import Button from '@mui/material/Button'
 import Chip from '@mui/material/Chip'
 import Stack from '@mui/material/Stack'
+import AdminConfirmModal from '@/components/AdminConfirmModal'
+import AdminNoteModal from '@/components/AdminNoteModal'
 
-export default function AdminDepositsPage(){
+export default function AdminWithdrawsPage(){
   const [items, setItems] = useState<any[]>([])
   const [loading, setLoading] = useState(false)
   const [confirmOpen, setConfirmOpen] = useState(false)
@@ -22,15 +22,13 @@ export default function AdminDepositsPage(){
   async function load(){
     try{
       setLoading(true)
-      // use the server-side admin list endpoint (requires SUPABASE_SERVICE_ROLE_KEY on server)
-      const res = await fetch('/api/admin/deposits/list_all')
+      const res = await fetch('/api/admin/withdraws/list_all')
       const j = await res.json()
       setItems(j || [])
     }finally{ setLoading(false) }
   }
 
   function onActionClick(id:string, action:'approve'|'reject'){
-  // open note modal first to allow admin to add an optional note
   setPendingNoteFor({ id, action })
   setNoteOpen(true)
   }
@@ -39,8 +37,7 @@ export default function AdminDepositsPage(){
     if (!confirmId || !confirmAction) return
     setLoading(true)
     try{
-      // call the new admin approve endpoint
-  const resp = await fetch('/api/admin/deposits/approve', { method: 'POST', headers: {'Content-Type':'application/json'}, body: JSON.stringify({ id: confirmId, action: confirmAction, note: '' }) })
+  const resp = await fetch('/api/admin/withdraws/approve', { method: 'POST', headers: {'Content-Type':'application/json'}, body: JSON.stringify({ id: confirmId, action: confirmAction, note: '' }) })
       const j = await resp.json()
       if (!resp.ok) throw new Error(j?.error || 'failed')
       await load()
@@ -58,7 +55,7 @@ export default function AdminDepositsPage(){
     <div className="min-h-screen p-6">
       <div className="max-w-5xl mx-auto">
         <header className="flex items-center justify-between mb-6">
-          <h1 className="text-2xl font-semibold">Deposit requests</h1>
+          <h1 className="text-2xl font-semibold">Withdraw requests</h1>
           <button className="px-3 py-1 bg-blue-600 text-white rounded" onClick={load} disabled={loading}>{loading ? 'Refreshing...' : 'Refresh'}</button>
         </header>
 
@@ -67,7 +64,7 @@ export default function AdminDepositsPage(){
           <Button variant="outlined" size="small" onClick={() => setQuery('')}>Clear</Button>
         </div>
 
-        {items.length === 0 && !loading && <p className="text-gray-600">No deposits</p>}
+        {items.length === 0 && !loading && <p className="text-gray-600">No withdraws</p>}
 
         <ul className="space-y-3">
           {items.filter(i => !query || String(i.user_id).includes(query) || String(i.reference || '').includes(query)).map(i => (
@@ -94,9 +91,8 @@ export default function AdminDepositsPage(){
         </ul>
       </div>
 
-      <AdminConfirmModal open={confirmOpen} title={confirmAction === 'approve' ? 'Approve deposit' : 'Reject deposit'} message={`Are you sure you want to ${confirmAction} this deposit?`} confirmLabel={confirmAction === 'approve' ? 'Approve' : 'Reject'} onConfirm={doAction} onCancel={() => setConfirmOpen(false)} loading={loading} />
+      <AdminConfirmModal open={confirmOpen} title={confirmAction === 'approve' ? 'Approve withdraw' : 'Reject withdraw'} message={`Are you sure you want to ${confirmAction} this withdraw?`} confirmLabel={confirmAction === 'approve' ? 'Approve' : 'Reject'} onConfirm={doAction} onCancel={() => setConfirmOpen(false)} loading={loading} />
       <AdminNoteModal open={noteOpen} title={pendingNoteFor?.action === 'approve' ? 'Add note before approving' : 'Add note before rejecting'} onCancel={() => { setNoteOpen(false); setPendingNoteFor(null) }} onConfirm={async (note?:string) => {
-        // set up confirm state and call doAction with note
         if (!pendingNoteFor) return
         setConfirmId(pendingNoteFor.id)
         setConfirmAction(pendingNoteFor.action)
@@ -104,7 +100,7 @@ export default function AdminDepositsPage(){
         setConfirmOpen(true)
         try{
           setLoading(true)
-          const resp = await fetch('/api/admin/deposits/approve', { method: 'POST', headers: {'Content-Type':'application/json'}, body: JSON.stringify({ id: pendingNoteFor.id, action: pendingNoteFor.action, note }) })
+          const resp = await fetch('/api/admin/withdraws/approve', { method: 'POST', headers: {'Content-Type':'application/json'}, body: JSON.stringify({ id: pendingNoteFor.id, action: pendingNoteFor.action, note }) })
           const j = await resp.json()
           if (!resp.ok) throw new Error(j?.error || 'failed')
           await load()
