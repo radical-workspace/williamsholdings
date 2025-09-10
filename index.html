@@ -1,0 +1,369 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Williams Holdings - Online Banking</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <div class="header-content">
+            <div class="logo">
+                <i class="fas fa-university"></i>
+                <span>Williams Holdings</span>
+            </div>
+            <div class="user-info">
+                <div class="user-details">
+                    <span class="user-name">John Williams</span>
+                    <div class="verification-badge">
+                        <i class="fas fa-check-circle"></i>
+                        <span>Verified</span>
+                    </div>
+                    <span class="account-number">Account: ****4521</span>
+                </div>
+                <div class="user-avatar">
+                    <i class="fas fa-user-circle"></i>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Container -->
+    <div class="main-container">
+        <!-- Sidebar Navigation -->
+        <nav class="sidebar">
+            <div class="nav-menu">
+                <div class="nav-item active" data-section="home">
+                    <i class="fas fa-home"></i>
+                    <span>Home</span>
+                </div>
+                <div class="nav-item" data-section="activity">
+                    <i class="fas fa-chart-line"></i>
+                    <span>Activity</span>
+                </div>
+                <div class="nav-item" data-section="cards">
+                    <i class="fas fa-credit-card"></i>
+                    <span>Cards</span>
+                </div>
+                <div class="nav-item" data-section="transfer">
+                    <i class="fas fa-exchange-alt"></i>
+                    <span>Transfer</span>
+                </div>
+                <div class="nav-item" data-section="deposit">
+                    <i class="fas fa-piggy-bank"></i>
+                    <span>Deposit</span>
+                </div>
+                <div class="nav-item" data-section="loan">
+                    <i class="fas fa-hand-holding-usd"></i>
+                    <span>Loan</span>
+                </div>
+                <div class="nav-item" data-section="irs-refund">
+                    <i class="fas fa-file-invoice-dollar"></i>
+                    <span>IRS Refund</span>
+                </div>
+                <div class="nav-item" data-section="settings">
+                    <i class="fas fa-cog"></i>
+                    <span>Settings</span>
+                </div>
+                <div class="nav-item" data-section="support">
+                    <i class="fas fa-headset"></i>
+                    <span>Support</span>
+                </div>
+                <div class="nav-item logout" onclick="logout()">
+                    <i class="fas fa-sign-out-alt"></i>
+                    <span>Logout</span>
+                </div>
+            </div>
+        </nav>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <!-- Home Section -->
+            <section id="home" class="content-section active">
+                <h1>Dashboard</h1>
+                <div class="dashboard-grid">
+                    <!-- Account Balance Card -->
+                    <div class="card balance-card">
+                        <div class="card-header">
+                            <h3>Account Balance</h3>
+                            <i class="fas fa-wallet"></i>
+                        </div>
+                        <div class="balance-amount">$45,892.50</div>
+                        <div class="balance-change positive">+2.5% from last month</div>
+                    </div>
+
+                    <!-- Quick Actions -->
+                    <div class="card quick-actions">
+                        <h3>Quick Actions</h3>
+                        <div class="action-buttons">
+                            <button class="action-btn" onclick="showSection('transfer')">
+                                <i class="fas fa-paper-plane"></i>
+                                <span>Send Money</span>
+                            </button>
+                            <button class="action-btn" onclick="showSection('deposit')">
+                                <i class="fas fa-plus"></i>
+                                <span>Deposit</span>
+                            </button>
+                            <button class="action-btn" onclick="showSection('cards')">
+                                <i class="fas fa-credit-card"></i>
+                                <span>Cards</span>
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Recent Transactions -->
+                    <div class="card transactions-card">
+                        <div class="card-header">
+                            <h3>Recent Transactions</h3>
+                            <button class="view-all-btn" onclick="showSection('activity')">View All</button>
+                        </div>
+                        <div class="transactions-list" id="recent-transactions">
+                            <!-- Transactions will be populated by JavaScript -->
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Activity Section -->
+            <section id="activity" class="content-section">
+                <h1>Activity</h1>
+                <div class="activity-container">
+                    <div class="card">
+                        <div class="card-header">
+                            <h3>Transaction History</h3>
+                            <div class="filter-controls">
+                                <select id="transaction-filter">
+                                    <option value="all">All Transactions</option>
+                                    <option value="income">Income</option>
+                                    <option value="expense">Expense</option>
+                                    <option value="transfer">Transfer</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="transactions-list full" id="all-transactions">
+                            <!-- All transactions will be populated by JavaScript -->
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Cards Section -->
+            <section id="cards" class="content-section">
+                <h1>Cards</h1>
+                <div class="cards-container">
+                    <div class="virtual-card">
+                        <div class="card-front">
+                            <div class="card-header">
+                                <span class="card-type">DEBIT</span>
+                                <div class="card-status active">
+                                    <span class="status-dot"></span>
+                                    <span>Active</span>
+                                </div>
+                            </div>
+                            <div class="card-number">**** **** **** 4521</div>
+                            <div class="card-details">
+                                <div class="card-holder">
+                                    <label>Card Holder</label>
+                                    <span>John Williams</span>
+                                </div>
+                                <div class="card-expiry">
+                                    <label>Expires</label>
+                                    <span>12/27</span>
+                                </div>
+                            </div>
+                            <div class="card-logo">
+                                <i class="fab fa-cc-visa"></i>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card-actions">
+                        <button class="action-btn">
+                            <i class="fas fa-lock"></i>
+                            <span>Freeze Card</span>
+                        </button>
+                        <button class="action-btn">
+                            <i class="fas fa-eye"></i>
+                            <span>View PIN</span>
+                        </button>
+                        <button class="action-btn">
+                            <i class="fas fa-cog"></i>
+                            <span>Settings</span>
+                        </button>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Transfer Section -->
+            <section id="transfer" class="content-section">
+                <h1>Transfer Money</h1>
+                <div class="transfer-container">
+                    <div class="transfer-options">
+                        <div class="transfer-option" onclick="showTransferType('local')">
+                            <div class="option-icon">
+                                <i class="fas fa-university"></i>
+                            </div>
+                            <div class="option-details">
+                                <h3>Local Transfer</h3>
+                                <p>No fees • Instant transfer</p>
+                            </div>
+                        </div>
+                        <div class="transfer-option" onclick="showTransferType('international')">
+                            <div class="option-icon">
+                                <i class="fas fa-globe"></i>
+                            </div>
+                            <div class="option-details">
+                                <h3>International Wire Transfer</h3>
+                                <p>Requires IBAN & SWIFT</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Local Transfer Form -->
+                    <div id="local-transfer-form" class="transfer-form" style="display: none;">
+                        <div class="card">
+                            <h3>Local Transfer</h3>
+                            <form id="local-transfer">
+                                <div class="form-group">
+                                    <label>Recipient Account Number</label>
+                                    <input type="text" id="local-account" placeholder="Enter account number" required>
+                                </div>
+                                <div class="form-group">
+                                    <label>Recipient Name</label>
+                                    <input type="text" id="local-name" placeholder="Enter recipient name" required>
+                                </div>
+                                <div class="form-group">
+                                    <label>Amount</label>
+                                    <div class="amount-input">
+                                        <span class="currency">$</span>
+                                        <input type="number" id="local-amount" placeholder="0.00" step="0.01" required>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label>Description (Optional)</label>
+                                    <input type="text" id="local-description" placeholder="What's this for?">
+                                </div>
+                                <button type="submit" class="submit-btn">Send Money</button>
+                            </form>
+                        </div>
+                    </div>
+
+                    <!-- International Transfer Form -->
+                    <div id="international-transfer-form" class="transfer-form" style="display: none;">
+                        <div class="card">
+                            <h3>International Wire Transfer</h3>
+                            <form id="international-transfer">
+                                <div class="form-group">
+                                    <label>Recipient Name</label>
+                                    <input type="text" id="intl-name" placeholder="Enter recipient name" required>
+                                </div>
+                                <div class="form-group">
+                                    <label>IBAN</label>
+                                    <input type="text" id="intl-iban" placeholder="Enter IBAN" required>
+                                </div>
+                                <div class="form-group">
+                                    <label>SWIFT Code</label>
+                                    <input type="text" id="intl-swift" placeholder="Enter SWIFT code" required>
+                                </div>
+                                <div class="form-group">
+                                    <label>Bank Name</label>
+                                    <input type="text" id="intl-bank" placeholder="Enter bank name" required>
+                                </div>
+                                <div class="form-group">
+                                    <label>Amount</label>
+                                    <div class="amount-input">
+                                        <span class="currency">$</span>
+                                        <input type="number" id="intl-amount" placeholder="0.00" step="0.01" required>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label>Purpose of Transfer</label>
+                                    <select id="intl-purpose" required>
+                                        <option value="">Select purpose</option>
+                                        <option value="personal">Personal</option>
+                                        <option value="business">Business</option>
+                                        <option value="investment">Investment</option>
+                                        <option value="education">Education</option>
+                                    </select>
+                                </div>
+                                <button type="submit" class="submit-btn">Send International Transfer</button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Other sections (placeholder for now) -->
+            <section id="deposit" class="content-section">
+                <h1>Deposit</h1>
+                <div class="card">
+                    <p>Deposit functionality coming soon...</p>
+                </div>
+            </section>
+
+            <section id="loan" class="content-section">
+                <h1>Loan</h1>
+                <div class="card">
+                    <p>Loan services coming soon...</p>
+                </div>
+            </section>
+
+            <section id="irs-refund" class="content-section">
+                <h1>IRS Refund</h1>
+                <div class="card">
+                    <p>IRS Refund processing coming soon...</p>
+                </div>
+            </section>
+
+            <section id="settings" class="content-section">
+                <h1>Settings</h1>
+                <div class="card">
+                    <p>Settings panel coming soon...</p>
+                </div>
+            </section>
+
+            <section id="support" class="content-section">
+                <h1>Support</h1>
+                <div class="card">
+                    <h3>Contact Customer Support</h3>
+                    <p>For assistance with IMF codes or other banking needs:</p>
+                    <div class="support-contact">
+                        <p><strong>Phone:</strong> 1-800-WILLIAMS</p>
+                        <p><strong>Email:</strong> support@williamsholdings.com</p>
+                        <p><strong>Hours:</strong> 24/7 Customer Support</p>
+                    </div>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <!-- IMF Code Modal -->
+    <div id="imf-modal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Security Verification Required</h3>
+                <span class="close" onclick="closeIMFModal()">&times;</span>
+            </div>
+            <div class="modal-body">
+                <p>This transaction requires an IMF (International Monetary Fund) code for security purposes.</p>
+                <div class="form-group">
+                    <label>Enter IMF Code</label>
+                    <input type="text" id="imf-code" placeholder="Enter your IMF code">
+                </div>
+                <p class="support-note">
+                    <i class="fas fa-info-circle"></i>
+                    Don't have an IMF code? Contact customer support at 1-800-WILLIAMS to obtain one.
+                </p>
+            </div>
+            <div class="modal-footer">
+                <button class="cancel-btn" onclick="closeIMFModal()">Cancel</button>
+                <button class="confirm-btn" onclick="verifyIMFCode()">Verify & Continue</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
